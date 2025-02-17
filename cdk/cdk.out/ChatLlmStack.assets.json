@@ -1,0 +1,34 @@
+{
+  "version": "39.0.0",
+  "files": {
+    "fa331239657a520490c8e64181986884605de9fccc42f25641965443fe3069da": {
+      "source": {
+        "path": "asset.fa331239657a520490c8e64181986884605de9fccc42f25641965443fe3069da.jar",
+        "packaging": "file"
+      },
+      "destinations": {
+        "277707130301-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-277707130301-us-east-1",
+          "objectKey": "fa331239657a520490c8e64181986884605de9fccc42f25641965443fe3069da.jar",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::277707130301:role/cdk-hnb659fds-file-publishing-role-277707130301-us-east-1"
+        }
+      }
+    },
+    "4189dcc9e238215edd82e43ff3ea4ac16a3c8c0b9c9ec5ff8867f6831365b157": {
+      "source": {
+        "path": "ChatLlmStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "277707130301-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-277707130301-us-east-1",
+          "objectKey": "4189dcc9e238215edd82e43ff3ea4ac16a3c8c0b9c9ec5ff8867f6831365b157.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::277707130301:role/cdk-hnb659fds-file-publishing-role-277707130301-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

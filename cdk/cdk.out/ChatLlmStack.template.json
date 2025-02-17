@@ -1,0 +1,490 @@
+{
+ "Resources": {
+  "ChatLlmLambdaServiceRoleFD5F9F6C": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatLlmLambda/ServiceRole/Resource"
+   }
+  },
+  "ChatLlmLambdaDE4A8902": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-277707130301-us-east-1",
+     "S3Key": "fa331239657a520490c8e64181986884605de9fccc42f25641965443fe3069da.jar"
+    },
+    "Handler": "src.main.java.com.chatapp.chatllm..ChatLlmApplication::handleRequest",
+    "MemorySize": 1024,
+    "Role": {
+     "Fn::GetAtt": [
+      "ChatLlmLambdaServiceRoleFD5F9F6C",
+      "Arn"
+     ]
+    },
+    "Runtime": "java17",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ChatLlmLambdaServiceRoleFD5F9F6C"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatLlmLambda/Resource",
+    "aws:asset:path": "asset.fa331239657a520490c8e64181986884605de9fccc42f25641965443fe3069da.jar",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ChatApiGateway5A61DDD1": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Name": "ChatApiGateway"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Resource"
+   }
+  },
+  "ChatApiGatewayCloudWatchRole95F61B01": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/CloudWatchRole/Resource"
+   }
+  },
+  "ChatApiGatewayAccountEC9D3D07": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "ChatApiGatewayCloudWatchRole95F61B01",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "ChatApiGateway5A61DDD1"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Account"
+   }
+  },
+  "ChatApiGatewayDeployment6D09CD52f21b0a95995a4dcde9447a2017b84876": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Automatically created by the RestApi construct",
+    "RestApiId": {
+     "Ref": "ChatApiGateway5A61DDD1"
+    }
+   },
+   "DependsOn": [
+    "ChatApiGatewayproxyANYAF95F9D2",
+    "ChatApiGatewayproxy03138E06",
+    "ChatApiGatewayANYC3A04674"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Deployment/Resource"
+   }
+  },
+  "ChatApiGatewayDeploymentStageprod17B257A9": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "ChatApiGatewayDeployment6D09CD52f21b0a95995a4dcde9447a2017b84876"
+    },
+    "RestApiId": {
+     "Ref": "ChatApiGateway5A61DDD1"
+    },
+    "StageName": "prod"
+   },
+   "DependsOn": [
+    "ChatApiGatewayAccountEC9D3D07"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/DeploymentStage.prod/Resource"
+   }
+  },
+  "ChatApiGatewayproxy03138E06": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ChatApiGateway5A61DDD1",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "{proxy+}",
+    "RestApiId": {
+     "Ref": "ChatApiGateway5A61DDD1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Default/{proxy+}/Resource"
+   }
+  },
+  "ChatApiGatewayproxyANYApiPermissionChatLlmStackChatApiGateway08F3D0C4ANYproxy9B78D72B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ChatLlmLambdaDE4A8902",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:277707130301:",
+       {
+        "Ref": "ChatApiGateway5A61DDD1"
+       },
+       "/",
+       {
+        "Ref": "ChatApiGatewayDeploymentStageprod17B257A9"
+       },
+       "/*/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Default/{proxy+}/ANY/ApiPermission.ChatLlmStackChatApiGateway08F3D0C4.ANY..{proxy+}"
+   }
+  },
+  "ChatApiGatewayproxyANYApiPermissionTestChatLlmStackChatApiGateway08F3D0C4ANYproxy53EB2511": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ChatLlmLambdaDE4A8902",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:277707130301:",
+       {
+        "Ref": "ChatApiGateway5A61DDD1"
+       },
+       "/test-invoke-stage/*/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Default/{proxy+}/ANY/ApiPermission.Test.ChatLlmStackChatApiGateway08F3D0C4.ANY..{proxy+}"
+   }
+  },
+  "ChatApiGatewayproxyANYAF95F9D2": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "ANY",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ChatLlmLambdaDE4A8902",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ChatApiGatewayproxy03138E06"
+    },
+    "RestApiId": {
+     "Ref": "ChatApiGateway5A61DDD1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Default/{proxy+}/ANY/Resource"
+   }
+  },
+  "ChatApiGatewayANYApiPermissionChatLlmStackChatApiGateway08F3D0C4ANY03CACA0E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ChatLlmLambdaDE4A8902",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:277707130301:",
+       {
+        "Ref": "ChatApiGateway5A61DDD1"
+       },
+       "/",
+       {
+        "Ref": "ChatApiGatewayDeploymentStageprod17B257A9"
+       },
+       "/*/"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Default/ANY/ApiPermission.ChatLlmStackChatApiGateway08F3D0C4.ANY.."
+   }
+  },
+  "ChatApiGatewayANYApiPermissionTestChatLlmStackChatApiGateway08F3D0C4ANY7965A07C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ChatLlmLambdaDE4A8902",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:277707130301:",
+       {
+        "Ref": "ChatApiGateway5A61DDD1"
+       },
+       "/test-invoke-stage/*/"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Default/ANY/ApiPermission.Test.ChatLlmStackChatApiGateway08F3D0C4.ANY.."
+   }
+  },
+  "ChatApiGatewayANYC3A04674": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "ANY",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ChatLlmLambdaDE4A8902",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "ChatApiGateway5A61DDD1",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "ChatApiGateway5A61DDD1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/ChatApiGateway/Default/ANY/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/01Oy07DMBD8lt6dBdJDuaYgTiCq8AGV6yxhm9iOsjYlsvzv2A6PnuZh78zUcLe7h3ojL1ypbqhGOkF4c1INIlnHMEp96iSEJ2+UI2vEw7u55gecNTEnFQVJDaG1I+aHjFHw9iiZ0TE0GZKGvVcDur1kFHKiXjq8yAXCcylqkV0zUQn4p41S1hsnHnEa7aIx0eReqTS4L60rSafWzwpLyWG2X8uv8xO88hd0H7bL1spi/LsUZW5OI9PnH6/eTd5FYWyHcOabz3oLO7jdnJmomtM40gjtit+5N4GnVAEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ChatLlmStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ChatApiGatewayEndpoint8030405C": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ChatApiGateway5A61DDD1"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ChatApiGatewayDeploymentStageprod17B257A9"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiGatewayUrl": {
+   "Description": "API Gateway endpoint for Chat LLM backend",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ChatApiGateway5A61DDD1"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ChatApiGatewayDeploymentStageprod17B257A9"
+      },
+      "/"
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
