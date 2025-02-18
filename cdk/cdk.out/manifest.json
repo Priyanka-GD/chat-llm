@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::277707130301:role/cdk-hnb659fds-deploy-role-277707130301-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::277707130301:role/cdk-hnb659fds-cfn-exec-role-277707130301-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-277707130301-us-east-1/4189dcc9e238215edd82e43ff3ea4ac16a3c8c0b9c9ec5ff8867f6831365b157.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-277707130301-us-east-1/ca75961650733c5d78c8e39ca8953982082f34028e73f0c3af8b0e000f75df64.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -122,6 +122,12 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "ChatApiGatewayANYC3A04674"
+          }
+        ],
+        "/ChatLlmStack/LambdaExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaExecutionRoleD5C26073"
           }
         ],
         "/ChatLlmStack/ApiGatewayUrl": [

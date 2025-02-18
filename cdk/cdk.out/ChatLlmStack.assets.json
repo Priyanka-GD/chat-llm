@@ -15,7 +15,7 @@
         }
       }
     },
-    "4189dcc9e238215edd82e43ff3ea4ac16a3c8c0b9c9ec5ff8867f6831365b157": {
+    "ca75961650733c5d78c8e39ca8953982082f34028e73f0c3af8b0e000f75df64": {
       "source": {
         "path": "ChatLlmStack.template.json",
         "packaging": "file"
@@ -23,7 +23,7 @@
       "destinations": {
         "277707130301-us-east-1": {
           "bucketName": "cdk-hnb659fds-assets-277707130301-us-east-1",
-          "objectKey": "4189dcc9e238215edd82e43ff3ea4ac16a3c8c0b9c9ec5ff8867f6831365b157.json",
+          "objectKey": "ca75961650733c5d78c8e39ca8953982082f34028e73f0c3af8b0e000f75df64.json",
           "region": "us-east-1",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::277707130301:role/cdk-hnb659fds-file-publishing-role-277707130301-us-east-1"
         }
