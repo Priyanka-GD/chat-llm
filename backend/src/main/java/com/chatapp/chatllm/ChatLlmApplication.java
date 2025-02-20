@@ -1,4 +1,4 @@
-package src.main.java.com.chatapp.chatllm;
+package com.chatapp.chatllm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

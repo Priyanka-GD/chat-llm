@@ -1,34 +1,39 @@
 import { Component } from '@angular/core';
-import { ChatService } from '../services/chat.service'; // Correct path
-
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { ChatService } from '../../services/chat/chat.service';
+import { ChatRequest } from '../../model/chat-request.model';
 
 @Component({
-selector: 'app-chat',
-templateUrl: './chat.component.html',
-styleUrls: ['./chat.component.css']
+  selector: 'app-chat',
+  standalone: true,
+  imports: [CommonModule, FormsModule, HttpClientModule],
+  providers: [ChatService],
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.css']
 })
-
 export class ChatComponent {
-  messages: { text: string; sender: string }[] = [];
   userInput: string = '';
-
   constructor(private chatService: ChatService) {}
-
+  chatHistory: { sender: string; text: string }[] = [];
   sendMessage() {
-      if (!this.userInput.trim()) return;
+    if (!this.userInput.trim()) return;
+    const chatRequest = new ChatRequest(this.userInput);
+    // Add user message to chat history
+    this.chatHistory.push({ sender: 'You', text: chatRequest.text });
+    console.log("Request Object:", JSON.stringify(chatRequest));
+    // Send user input to backend AI model
+    this.chatService.sendMessage(chatRequest).subscribe(
+      (response: any) => {
+        console.log("✅ Received Response:", response);
+        this.chatHistory.push({ sender: 'AI', text: response });
+      },
+      (error: any) => {
+        console.error('Error:', error);
+      }
+    );
 
-      this.messages.push({ text: this.userInput, sender: 'user' });
-
-      this.chatService.sendMessage(this.userInput).subscribe(
-        (response: { llmResponse: string }) => { // Add explicit type
-          this.messages.push({ text: response.llmResponse, sender: 'bot' });
-        },
-        (error: any) => { // Add explicit type
-          console.error('Error:', error);
-          this.messages.push({ text: 'Error communicating with AI', sender: 'bot' });
-        }
-      );
-    // Clear user input
     this.userInput = '';
   }
 }

@@ -1,14 +1,27 @@
-package src.main.java.com.chatapp.chatllm.model;
+package com.chatapp.chatllm.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ChatRequest {
-    private String message;
+    @JsonProperty("text")  // ✅ Ensures JSON key mapping
+    private String text;
 
-    public String getMessage() {
-        return message;
+    public ChatRequest() {}
+
+    public ChatRequest(String text) {
+        this.text = text;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatRequest{text='" + text + "'}";
     }
 }
-

@@ -1,12 +1,21 @@
 <div class="chat-container">
-  <div class="chat-box">
-    <div *ngFor="let msg of messages" class="message" [ngClass]="msg.sender">
-      <strong>{{ msg.sender === 'user' ? 'You' : 'AI' }}:</strong> {{ msg.text }}
+  <h2>Chat Application</h2>
+
+  <!-- Chat Messages -->
+  <div class="chat-messages">
+    <div *ngFor="let message of chatHistory" class="chat-message">
+      <strong>{{ message.sender }}:</strong> {{ message.text }}
     </div>
   </div>
 
-  <div class="input-box">
-    <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
+  <!-- User Input -->
+  <div class="chat-input">
+    <input
+      type="text"
+      [(ngModel)]="userInput"
+      (keyup.enter)="sendMessage()"
+      placeholder="Type a message..."
+    />
     <button (click)="sendMessage()">Send</button>
   </div>
 </div>
