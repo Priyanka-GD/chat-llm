@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api/chat' // Spring Boot API URL
+  apiUrl: 'https://hd59wi41j8.execute-api.us-east-1.amazonaws.com/prod/' // Spring Boot API URL
 };

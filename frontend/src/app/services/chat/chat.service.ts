@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ChatRequest } from '../../model/chat-request.model'; // ✅ Ensure this path is correct
+import { ChatRequest } from '../../model/chat-request.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiGatewayUrl = "https://hd59wi41j8.execute-api.us-east-1.amazonaws.com/prod/"; // ✅ Replace with actual API Gateway URL
+  private apiGatewayUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
