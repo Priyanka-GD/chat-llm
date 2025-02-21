@@ -1,7 +1,7 @@
 export class ChatRequest {
-  text: string;
+  inputText: string;
 
-  constructor(text: string) {
-    this.text = text;
+  constructor(inputText: string) {
+    this.inputText = inputText;
   }
 }
