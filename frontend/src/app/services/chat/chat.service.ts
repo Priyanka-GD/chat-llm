@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ChatRequest } from '../../model/chat-request.model'; // Ensure correct import
+import { ChatRequest } from '../../model/chat-request.model'; // ✅ Ensure this path is correct
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://localhost:8080/chat/send'; // Ensure this is correct
+  private apiGatewayUrl = "https://hd59wi41j8.execute-api.us-east-1.amazonaws.com/prod/"; // ✅ Replace with actual API Gateway URL
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(request: ChatRequest): Observable<string> {
-    console.log("🔹 Sending to backend:", JSON.stringify(request)); // ✅ Log outgoing request
-    return this.http.post<string>(this.apiUrl, request, { headers: { 'Content-Type': 'application/json' } });
+  /** ✅ Corrected method name to match your function call */
+  invokeLambda(request: ChatRequest): Observable<any> {
+    console.log("📤 Sending request to Lambda:", JSON.stringify(request));
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(this.apiGatewayUrl, request, { headers });
   }
 }

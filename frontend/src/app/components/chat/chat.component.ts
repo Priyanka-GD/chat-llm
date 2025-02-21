@@ -17,23 +17,25 @@ export class ChatComponent {
   userInput: string = '';
   constructor(private chatService: ChatService) {}
   chatHistory: { sender: string; text: string }[] = [];
-  sendMessage() {
-    if (!this.userInput.trim()) return;
-    const chatRequest = new ChatRequest(this.userInput);
-    // Add user message to chat history
-    this.chatHistory.push({ sender: 'You', text: chatRequest.text });
-    console.log("Request Object:", JSON.stringify(chatRequest));
-    // Send user input to backend AI model
-    this.chatService.sendMessage(chatRequest).subscribe(
-      (response: any) => {
-        console.log("✅ Received Response:", response);
-        this.chatHistory.push({ sender: 'AI', text: response });
-      },
-      (error: any) => {
-        console.error('Error:', error);
-      }
-    );
+   sendMessage() {
+       if (!this.userInput.trim()) return;
+       const chatRequest = new ChatRequest(this.userInput);
+       this.chatHistory.push({ sender: 'You', text: chatRequest.text });
 
-    this.userInput = '';
-  }
+       console.log("📤 Sending request to Lambda:", JSON.stringify(chatRequest));
+
+       // Call AWS Lambda via API Gateway
+       this.chatService.invokeLambda(chatRequest).subscribe(
+         (response: any) => {
+           console.log("✅ Received Lambda Response:", response);
+           this.chatHistory.push({ sender: 'AI', text: response.message });
+         },
+         (error: any) => {
+           console.error('❌ Error calling Lambda:', error);
+         }
+       );
+
+       this.userInput = '';
+   }
+
 }
