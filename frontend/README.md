@@ -105,3 +105,4 @@ Future Enhancements
 
 🔒 Implement Authentication → Secure API calls using JWT tokens.
 
+![img.png](img.png)
